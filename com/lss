@@ -1,0 +1,4 @@
+#!/bin/bash
+#ls-sinks
+pacmd list-sinks | grep -e name: -e index -e description -e muted -e volume: 
+

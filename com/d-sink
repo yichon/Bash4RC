@@ -1,0 +1,5 @@
+#!/bin/bash
+x=$1
+index=$(lss | grep -e index | sed -n ${x}'p' | grep -oP '\d+')
+
+pactl set-default-sink $index

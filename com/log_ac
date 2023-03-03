@@ -1,0 +1,52 @@
+#!/bin/bash
+
+WHO=Server
+# CONFIG_PATH=$HOME/Documents/mila-docs
+# LIB_PATH=/home/yichoz/1/Bash/lib
+
+C_DIR=$(dirname "$0")
+source $C_DIR/paths.sh
+
+source $PRED_PATH/git_ops.sh "$CONFIG_PATH"
+
+
+p_state="unknown"
+n=$(wc -l < $CONFIG_PATH/power_log.txt)
+if [ $n -gt "0" ] ; then
+   p_state=$(sed -n ${n}'p' $CONFIG_PATH/power_log.txt | grep -oP '(?<=AC\sPower\s)\w+') ; # echo $ps
+fi
+
+if on_ac_power ; then 
+   [ $p_state != "On" ] && echo $(date) AC Power On... >> $CONFIG_PATH/power_log.txt && p_state="On" && commit_and_push 
+else
+   [ $p_state != "Down" ] && echo $(date) AC Power Down... >> $CONFIG_PATH/power_log.txt && p_state="Down" && commit_and_push
+fi
+
+
+echo Power $p_state
+
+
+#n=$(wc -l < $CONFIG_PATH/power_log.txt)
+#if [ $n -gt "0" ] ; then 
+#   ps=$(sed -n ${n}'p' $CONFIG_PATH/power_log.txt | grep -oP '(?<=AC\sPower\s)\w+') ; echo $ps
+#   if on_ac_power ; then 
+#      [ $ps == "Down" ] && echo $(date) AC Power On... >> $CONFIG_PATH/power_log.txt && commit_and_push
+#   else
+#      [ $ps == "On" ] && echo $(date) AC Power Down... >> $CONFIG_PATH/power_log.txt && commit_and_push
+#   fi
+#fi
+
+
+#if [ $n -eq "0" ] ; then 
+#   if on_ac_power ; then 
+#      echo $(date) AC Power On... >> $CONFIG_PATH/power_log.txt && commit_and_push
+#   else
+#      echo $(date) AC Power Down... >> $CONFIG_PATH/power_log.txt && commit_and_push
+#   fi
+#fi
+      
+
+
+
+# watch -d -n 1 ac_log
+
